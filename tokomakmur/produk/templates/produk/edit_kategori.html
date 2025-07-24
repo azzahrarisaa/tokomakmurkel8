@@ -11,7 +11,7 @@
     <input type="text" name="nama" value="{{ kategori.nama }}" class="w-full border border-gray-300 rounded p-2" required>
   </div>
   <div class="flex justify-end gap-2">
-    <a href="{% url 'edit_kategori' kategori.id %}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">Batal</a>
+    <a href="{% url 'kategori_produk' %}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">Batal</a>
      <button type="submit" class="px-4 py-2 bg-[#F297A0] text-white rounded-lg hover:bg-[#e1858b] transition-all">Simpan</button>
   </div>
 </form>
