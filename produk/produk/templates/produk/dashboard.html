@@ -1,0 +1,127 @@
+{% extends "layouts.html" %}
+
+{% block title %}Dashboard | Toko Makmur{% endblock %}
+
+{% block content %}
+<!-- Heading -->
+<div class="mb-10 text-center bg-white p-6 rounded-2xl shadow">
+   <h1 class="text-4xl font-extrabold mb-2 text-[#7A8450]">
+    Halo Admin! <span class="text-[#F9CDD5]">Siap Mengelola Stok Hari Ini?</span>
+  </h1>
+  <p class="text-lg text-[#7A8450]">Aplikasi ini membantu Anda mengontrol produk, penjualan, dan pembelian dengan cepat & akurat 🧮</p>
+</div>
+
+<!-- Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+  <!-- Total Produk -->
+  <a href="{% url 'daftar_produk' %}" class="bg-white border border-[#F9CDD5] rounded-2xl shadow-md p-6 text-center hover:bg-[#F9CDD5] hover:text-[#7A8450] transition-all group">
+    <div class="flex justify-center mb-2">
+      <i data-lucide="package" class="w-6 h-6 text-[#7A8450] group-hover:text-white transition-all"></i>
+    </div>
+    <h6 class="text-xs uppercase mb-2 tracking-wide text-[#7A8450]">Total Produk</h6>
+    <h3 class="text-3xl font-bold text-[#7A8450] group-hover:text-white">{{ total_produk }}</h3>
+  </a>
+
+  <!-- Total Stok -->
+  <div class="bg-[#F9CDD5] border border-[#7A8450] rounded-2xl shadow-md p-6 text-center hover:bg-white hover:text-[#7A8450] transition-all group">
+    <div class="flex justify-center mb-2">
+      <i data-lucide="boxes" class="w-6 h-6 text-[#7A8450] group-hover:text-[#7A8450] transition-all"></i>
+    </div>
+    <h6 class="text-xs uppercase mb-2 tracking-wide text-[#7A8450]">Total Stok</h6>
+    <h3 class="text-3xl font-bold text-[#7A8450] group-hover:text-[#7A8450]">{{ total_stok }}</h3>
+  </div>
+
+  <!-- Total Penjualan -->
+  <a href="{% url 'penjualan' %}" class="bg-white border border-[#F9CDD5] rounded-2xl shadow-md p-6 text-center hover:bg-[#F9CDD5] hover:text-[#7A8450] transition-all group">
+    <div class="flex justify-center mb-2">
+      <i data-lucide="shopping-cart" class="w-6 h-6 text-[#7A8450] group-hover:text-white transition-all"></i>
+    </div>
+    <h6 class="text-xs uppercase mb-2 tracking-wide text-[#7A8450]">Total Penjualan</h6>
+    <h3 class="text-3xl font-bold text-[#7A8450] group-hover:text-white">Rp {{ total_penjualan|floatformat:0 }}</h3>
+  </a>
+
+  <!-- Total Pembelian -->
+  <a href="{% url 'daftar_pembelian' %}" class="bg-[#7A8450] border border-[#F9CDD5] rounded-2xl shadow-md p-6 text-center hover:bg-white hover:text-[#7A8450] transition-all group">
+    <div class="flex justify-center mb-2">
+      <i data-lucide="file-text" class="w-6 h-6 text-white group-hover:text-[#7A8450] transition-all"></i>
+    </div>
+    <h6 class="text-xs uppercase mb-2 tracking-wide text-white">Total Pembelian</h6>
+    <h3 class="text-3xl font-bold text-white group-hover:text-[#7A8450]">Rp {{ total_pembelian|floatformat:0 }}</h3>
+  </a>
+</div>
+
+<!-- Grafik Produk & Stok -->
+<div class="bg-white p-6 rounded-2xl shadow-md mb-6 border border-[#F9CDD5]">
+  <h2 class="text-xl font-semibold mb-4 text-[#7A8450]">Statistik Produk & Stok</h2>
+  <canvas id="produkStokChart" height="100"></canvas>
+</div>
+
+<!-- Grafik Penjualan & Pembelian -->
+<div class="bg-white p-6 rounded-2xl shadow-md border border-[#F9CDD5]">
+  <h2 class="text-xl font-semibold mb-4 text-[#7A8450]">Transaksi Penjualan & Pembelian (rb)</h2>
+  <canvas id="penjualanPembelianChart" height="100"></canvas>
+</div>
+
+<!-- Script untuk ikon dan chart -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  lucide.createIcons();
+
+  // Chart: Produk & Stok
+  const produkStokCtx = document.getElementById('produkStokChart').getContext('2d');
+  new Chart(produkStokCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Produk', 'Stok'],
+      datasets: [{
+        label: 'Jumlah',
+        data: [{{ total_produk }}, {{ total_stok }}],
+        backgroundColor: ['#F9CDD5', '#7A8450'],
+        borderRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { stepSize: 5 }
+        }
+      }
+    }
+  });
+
+  // Chart: Penjualan & Pembelian
+  const penjualanCtx = document.getElementById('penjualanPembelianChart').getContext('2d');
+  new Chart(penjualanCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Penjualan (rb)', 'Pembelian (rb)'],
+      datasets: [{
+        label: 'Jumlah',
+        data: [{{ penjualan_rb|floatformat:0 }}, {{ pembelian_rb|floatformat:0 }}],
+        backgroundColor: ['#7A8450', '#F9CDD5'],
+        borderRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: {{ max_chart }},
+          ticks: {
+            stepSize: 500,
+            callback: function(value) {
+              return value + ' rb';
+            }
+          }
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}

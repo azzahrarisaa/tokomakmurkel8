@@ -1,0 +1,52 @@
+{% extends 'layouts.html' %}
+{% load humanize %}
+
+{% block title %}Daftar Pembelian{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-6 text-[#7A8450]">Daftar Pembelian</h1>
+
+<!-- Tombol Tambah Pembelian -->
+<div class="flex justify-end mb-4">
+  <a href="{% url 'tambah_pembelian' %}" class="bg-[#F297A0] hover:bg-[#e1858b] text-white px-4 py-2 rounded shadow transition-all">
+    + Tambah Pembelian
+  </a>
+</div>
+
+<!-- Tabel Data Pembelian -->
+<div class="overflow-x-auto shadow rounded-lg border border-[#F297A0] bg-white">
+  <table class="min-w-full text-sm text-left">
+    <thead class="bg-[#F297A0] text-white uppercase text-xs">
+      <tr>
+        <th class="px-4 py-3">No</th>
+        <th class="px-4 py-3">Tanggal</th>
+        <th class="px-4 py-3">Pemasok</th>
+        <th class="px-4 py-3">Total</th>
+        <th class="px-4 py-3 text-center">Aksi</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-[#F9D0CE] text-[#7A8450]">
+      {% for item in data %}
+      <tr class="hover:bg-[#F9D0CE] transition">
+        <td class="px-4 py-3">{{ forloop.counter }}</td>
+        <td class="px-4 py-3">{{ item.tanggal }}</td>
+        <td class="px-4 py-3">{{ item.pemasok.nama }}</td>
+        <td class="px-4 py-3">Rp {{ item.total|floatformat:0|intcomma }}</td>
+        <td class="px-4 py-3 text-center space-x-2">
+          <a href="{% url 'detail_pembelian' item.id %}" class="inline-block px-3 py-1 bg-blue-400 hover:bg-blue-500 text-white text-sm rounded-md transition">Detail</a>
+          <a href="{% url 'edit_pembelian' item.id %}" class="inline-block px-3 py-1 bg-[#F297A0] hover:bg-[#e1858b] text-white text-sm rounded-md transition">Edit</a>
+          <form action="{% url 'hapus_pembelian' item.id %}" method="post" class="inline" onsubmit="return confirm('Yakin ingin menghapus?')">
+            {% csrf_token %}
+            <button type="submit" class="bg-red-400 hover:bg-red-500 text-white px-3 py-1 text-xs rounded transition-all">🗑️ Hapus</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" class="text-center py-4 text-[#7A8450]">Belum ada data pembelian.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

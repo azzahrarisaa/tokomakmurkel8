@@ -1,0 +1,115 @@
+{% extends "layouts.html" %}
+{% block title %}Tambah Pembelian{% endblock %}
+{% load static %}
+
+{% block content %}
+<h2 class="text-2xl font-bold mb-6 text-[#F297A0]">Tambah Pembelian Baru</h2>
+
+<form action="{% url 'tambah_pembelian' %}" method="post" class="bg-white p-6 rounded-2xl shadow-lg max-w-xl">
+  {% csrf_token %}
+
+  <!-- Pilih Pemasok -->
+  <div class="mb-4">
+    <label class="block text-sm font-medium text-[#7A8450] mb-1">Pemasok</label>
+    <select name="pemasok_id" class="w-full border border-[#F297A0] rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#F297A0]" required>
+      <option value="">-- Pilih Pemasok --</option>
+      {% for p in pemasok %}
+        <option value="{{ p.id }}">{{ p.nama }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- Container Baris Produk -->
+  <div id="produk-container">
+    <div class="produk-row mb-6 border-t border-gray-200 pt-4">
+      <!-- Pilih Produk atau Tambah Baru -->
+      <div class="mb-2">
+        <label class="block text-sm font-medium text-[#7A8450] mb-1">Produk</label>
+        <select name="produk_id[]" class="w-full produk-dropdown border border-[#F297A0] rounded-lg px-4 py-2">
+          <option value="">-- Pilih Produk --</option>
+          {% for pr in produk_list %}
+            <option value="{{ pr.id }}">{{ pr.nama }}</option>
+          {% endfor %}
+        </select>
+
+        <label class="inline-flex items-center mt-2">
+          <input type="checkbox" class="tambah-produk-baru-checkbox">
+          <span class="ml-2 text-sm text-[#7A8450]">+ Tambah Produk Baru</span>
+        </label>
+      </div>
+
+      <!-- Form Produk Baru -->
+      <div class="form-produk-baru mt-3 hidden">
+        <input type="text" name="nama_produk_baru[]" class="form-input mb-2 w-full border border-[#F297A0] rounded-lg px-4 py-2" placeholder="Nama Produk">
+        <input type="text" name="kode_produk_baru[]" class="form-input mb-2 w-full border border-[#F297A0] rounded-lg px-4 py-2" placeholder="Kode Produk">
+        <input type="number" name="harga_beli_baru[]" class="form-input mb-2 w-full border border-[#F297A0] rounded-lg px-4 py-2" placeholder="Harga Beli">
+        <input type="number" name="harga_jual_baru[]" class="form-input mb-2 w-full border border-[#F297A0] rounded-lg px-4 py-2" placeholder="Harga Jual">
+      </div>
+
+      <div class="mb-2">
+        <label class="block text-sm font-medium text-[#7A8450] mb-1">Jumlah</label>
+        <input type="number" name="jumlah[]" min="1" required class="w-full border border-[#F297A0] rounded-lg px-4 py-2">
+      </div>
+
+      <div class="mb-2">
+        <label class="block text-sm font-medium text-[#7A8450] mb-1">Harga Satuan</label>
+        <input type="number" name="harga_satuan[]" min="0" step="0.01" required class="w-full border border-[#F297A0] rounded-lg px-4 py-2">
+      </div>
+    </div>
+  </div>
+
+  <!-- Tombol Tambah Baris -->
+  <div class="mb-6">
+    <button type="button" onclick="tambahBarisProduk()" class="text-sm text-blue-600 hover:underline">+ Tambah Baris Produk</button>
+  </div>
+
+  <!-- Tombol Simpan -->
+  <div class="flex justify-end gap-2">
+    <a href="{% url 'daftar_pembelian' %}" class="px-4 py-2 bg-[#F3EBDB] text-[#7A8450] rounded-lg hover:bg-[#e4dccb] transition-all">Batal</a>
+    <button type="submit" class="px-4 py-2 bg-[#F297A0] text-white rounded-lg hover:bg-[#e1858b] transition-all">Simpan</button>
+  </div>
+</form>
+
+<script>
+  function setupCheckboxEvents() {
+    document.querySelectorAll('.tambah-produk-baru-checkbox').forEach((checkbox, i) => {
+      checkbox.addEventListener('change', function () {
+        const form = document.querySelectorAll('.form-produk-baru')[i];
+        const dropdown = document.querySelectorAll('.produk-dropdown')[i];
+        if (this.checked) {
+          form.classList.remove('hidden');
+          dropdown.disabled = true;
+        } else {
+          form.classList.add('hidden');
+          dropdown.disabled = false;
+        }
+      });
+    });
+  }
+
+  function tambahBarisProduk() {
+    const container = document.getElementById('produk-container');
+    const barisPertama = container.querySelector('.produk-row');
+    const barisBaru = barisPertama.cloneNode(true);
+
+    // Reset semua nilai input
+    barisBaru.querySelectorAll('input').forEach(input => {
+      if (input.type === 'checkbox') {
+        input.checked = false;
+      } else {
+        input.value = '';
+      }
+    });
+
+    // Reset form baru & sembunyikan input produk baru
+    barisBaru.querySelector('.form-produk-baru').classList.add('hidden');
+    barisBaru.querySelector('.produk-dropdown').disabled = false;
+
+    container.appendChild(barisBaru);
+    setupCheckboxEvents();
+  }
+
+  // Setup event pertama kali
+  document.addEventListener('DOMContentLoaded', setupCheckboxEvents);
+</script>
+{% endblock %}

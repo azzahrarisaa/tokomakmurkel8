@@ -1,0 +1,51 @@
+{% extends 'layouts.html' %}
+{% load humanize %}
+{% load custom_filters %}
+
+{% block title %}Detail Pembelian{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl font-bold mb-4 text-[#F297A0]">Detail Pembelian</h2>
+
+<!-- Info Umum -->
+<div class="mb-4 text-[#7A8450]">
+  <p class="mb-1"><strong>Tanggal:</strong> {{ pembelian.tanggal }}</p>
+  <p><strong>Pemasok:</strong> {{ pembelian.pemasok.nama }}</p>
+</div>
+
+<!-- Tabel Detail -->
+<div class="overflow-x-auto shadow rounded-lg border border-[#F297A0] bg-white">
+  <table class="min-w-full text-sm text-left">
+    <thead class="bg-pink-100 text-[#7A8450] uppercase text-xs">
+      <tr>
+        <th class="px-4 py-3">Produk</th>
+        <th class="px-4 py-3 text-center">Jumlah</th>
+        <th class="px-4 py-3 text-right">Harga Satuan</th>
+        <th class="px-4 py-3 text-right">Subtotal</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-[#F9D0CE] text-[#7A8450]">
+  {% for d in detail %}
+  <tr class="hover:bg-[#F9D0CE] transition">
+    <td class="px-4 py-2">{{ d.produk.nama }}</td>
+    <td class="px-4 py-2 text-center">{{ d.jumlah }}</td>
+    <td class="px-4 py-2 text-right">Rp {{ d.harga_satuan|floatformat:0|intcomma }}</td>
+    <td class="px-4 py-2 text-right">Rp {{ d.jumlah|multiply:d.harga_satuan|floatformat:0|intcomma }}</td>
+  </tr>
+  {% empty %}
+  <tr>
+    <td colspan="4" class="text-center py-4">Tidak ada detail pembelian.</td>
+  </tr>
+  {% endfor %}
+</tbody>
+
+  </table>
+</div>
+
+<!-- Tombol Kembali -->
+<div class="mt-6">
+  <a href="{% url 'daftar_pembelian' %}" class="inline-block bg-[#D9D9D9] text-[#7A8450] px-5 py-2 rounded hover:bg-[#cfcfcf] transition">
+    Kembali
+  </a>
+</div>
+{% endblock %}
