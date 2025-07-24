@@ -1,0 +1,67 @@
+{% extends "layouts.html" %}
+{% block title %}Daftar Produk{% endblock %}
+{% load static %}
+
+{% block content %}
+<h2 class="text-2xl font-bold mb-4 text-[#7A8450]">Daftar Produk</h2>
+
+<!-- Tombol Tambah Produk -->
+<div class="flex justify-end mb-4">
+  <a href="{% url 'tambah_produk' %}" class="bg-[#F297A0] hover:bg-[#e1858b] text-white px-4 py-2 rounded-lg shadow-md transition-all">
+    + Tambah Produk Baru
+  </a>
+</div>
+
+<!-- Tabel Produk -->
+<table class="min-w-full bg-white shadow-lg rounded-xl overflow-hidden">
+  <thead class="bg-[#F297A0] text-white text-sm uppercase">
+    <tr>
+      <th class="py-3 px-4">Gambar</th>
+      <th class="py-3 px-4">Kode</th>
+      <th class="py-3 px-4">Nama</th>
+      <th class="py-3 px-4">Kategori</th>
+      <th class="py-3 px-4">Stok</th>
+      <th class="py-3 px-4">Harga Jual</th>
+      <th class="py-3 px-4 text-center">Aksi</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in produk %}
+    <tr class="border-b border-pink-100 hover:bg-[#F9D0CE] transition">
+      <td class="py-2 px-4">
+        {% if p.gambar %}
+          <img src="{{ p.gambar.url }}" class="w-20 h-20 object-cover rounded-xl border border-pink-200" alt="{{ p.nama }}">
+        {% else %}
+          <span class="text-gray-400 italic">Tidak ada</span>
+        {% endif %}
+      </td>
+      <td class="py-2 px-4 text-[#7A8450] font-semibold">{{ p.kode_produk }}</td>
+      <td class="py-2 px-4 text-[#7A8450]">{{ p.nama }}</td>
+      <td class="py-2 px-4 text-[#7A8450]">{{ p.kategori.nama }}</td>
+      <td class="py-2 px-4">
+      {% if p.stok <= 5 %}
+     <span class="text-red-500 font-semibold">{{ p.stok }}</span>
+      {% elif p.stok <= 20 %}
+     <span class="text-yellow-500 font-semibold">{{ p.stok }}</span>
+      {% else %}
+     <span class="text-green-600 font-semibold">{{ p.stok }}</span>
+     {% endif %}
+     </td>
+
+      <td class="py-2 px-4 text-[#7A8450]">Rp {{ p.harga_jual|floatformat:0 }}</td>
+      <td class="py-2 px-4 text-center space-x-2">
+        <a href="{% url 'edit_produk' p.id %}" class="inline-block px-3 py-1 bg-[#F297A0] hover:bg-[#e1858b] text-white text-sm rounded-md transition">Edit</a>
+        <form action="{% url 'hapus_produk' p.id %}" method="post" class="inline-block" onsubmit="return confirm('Yakin ingin menghapus produk ini?')">
+          {% csrf_token %}
+          <button type="submit" class="px-3 py-1 bg-red-400 hover:bg-red-500 text-white text-sm rounded-md transition">🗑️ Hapus</button>
+        </form>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="7" class="text-center py-4 text-[#B6BB79]">Belum ada produk tersedia.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

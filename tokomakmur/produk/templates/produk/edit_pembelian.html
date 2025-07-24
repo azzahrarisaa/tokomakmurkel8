@@ -1,0 +1,30 @@
+{% extends 'layouts.html' %}
+{% block title %}Edit Pembelian{% endblock %}
+{% load humanize %}
+
+{% block content %}
+<h2 class="text-2xl font-bold mb-6 text-[#F297A0]">Edit Pembelian</h2>
+
+<form method="POST" class="bg-white p-6 rounded-lg shadow max-w-xl border border-blue-200">
+  {% csrf_token %}
+  
+  <div class="mb-4">
+    <label for="pemasok" class="block font-medium text-[#7A8450]">Pemasok</label>
+    <select name="pemasok_id" id="pemasok" required class="w-full p-2 border rounded">
+      {% for p in pemasok %}
+      <option value="{{ p.id }}" {% if pembelian.pemasok.id == p.id %}selected{% endif %}>{{ p.nama }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="mb-4">
+    <label for="total" class="block font-medium text-[#7A8450]">Total Pembelian</label>
+    <input type="number" name="total" id="total" value="{{ pembelian.total }}" step="0.01" required class="w-full p-2 border rounded">
+  </div>
+
+  <div class="flex justify-end gap-2">
+    <a href="{% url 'daftar_pembelian' %}" class="px-4 py-2 bg-[#F3EBDB] text-[#7A8450] rounded-lg hover:bg-[#e4dccb] transition-all">Batal</a>
+    <button type="submit" class="px-4 py-2 bg-[#F297A0] text-white rounded-lg hover:bg-[#e1858b] transition-all">Simpan</button>
+  </div>
+</form>
+{% endblock %}

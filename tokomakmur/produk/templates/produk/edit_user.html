@@ -1,0 +1,39 @@
+{% extends "layouts.html" %}
+{% block title %}Edit User{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl font-bold mb-6 text-[#F297A0]">Edit User: {{ user.username }}</h2>
+
+<form method="POST" class="bg-white p-6 rounded-xl shadow max-w-xl">
+  {% csrf_token %}
+
+  <div class="mb-4">
+    <label for="username" class="block mb-1 text-sm font-medium text-[#7A8450]">Username</label>
+    <input type="text" id="username" name="username" value="{{ user.username }}" class="w-full border border-[#F297A0] rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#F297A0]" required>
+  </div>
+
+  <div class="mb-4">
+    <label for="email" class="block mb-1 text-sm font-medium text-[#7A8450]">Email</label>
+    <input type="email" id="email" name="email" value="{{ user.email }}" class="w-full border border-[#F297A0] rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#F297A0]">
+  </div>
+
+  <div class="mb-4">
+    <label for="password" class="block mb-1 text-sm font-medium text-[#7A8450]">Password (kosongkan jika tidak diubah)</label>
+    <input type="password" id="password" name="password" class="w-full border border-[#F297A0] rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#F297A0]">
+  </div>
+
+  <div class="mb-6">
+    <label for="role" class="block mb-1 text-sm font-medium text-[#7A8450]">Role</label>
+    <select id="role" name="role" class="w-full border border-[#F297A0] rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#F297A0]">
+      <option value="admin" {% if user.is_staff %}selected{% endif %}>Admin</option>
+      <option value="user" {% if not user.is_staff %}selected{% endif %}>User</option>
+      <option value="kasir" {% if not user.is_staff %}selected{% endif %}>Kasir</option>
+    </select>
+  </div>
+
+  <div class="flex justify-end gap-2">
+    <a href="{% url 'daftar_user' %}" class="px-4 py-2 bg-[#F3EBDB] text-[#7A8450] rounded-lg hover:bg-[#e4dccb] transition-all">Batal</a>
+    <button type="submit" class="px-4 py-2 bg-[#F297A0] text-white rounded-lg hover:bg-[#e1858b] transition-all">Simpan</button>
+  </div>
+</form>
+{% endblock %}

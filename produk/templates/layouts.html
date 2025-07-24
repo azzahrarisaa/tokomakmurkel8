@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>{% block title %}Admin Panel{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .transition-all {
+      transition: all 0.3s ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-[#F7C7D0] font-sans leading-normal tracking-normal text-[#7A8450]">
+
+  <!-- Tombol toggle -->
+<button id="toggleSidebar" class="fixed top-4 left-4 z-50 text-[#7A8450] text-xl focus:outline-none">
+  ☰
+</button>
+
+
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-gradient-to-b from-[#F297A0] to-[#F7C7D0] text-white p-6 fixed top-0 left-0 h-full transition-all z-40 shadow-md border-r border-[#F3EBDB]">
+      <h1 class="text-2xl font-extrabold mb-8 mt-10 tracking-wide">TOKO MAKMUR</h1>
+
+      <nav class="space-y-3">
+        <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white hover:text-[#7A8450]">
+          <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
+        </a>
+
+        <a href="{% url 'daftar_user' %}" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white hover:text-[#7A8450]">
+          <i data-lucide="users" class="w-5 h-5"></i> User
+        </a>
+
+        <!-- Produk: link + toggle -->
+        <div>
+          <div class="flex items-center justify-between w-full">
+            <a href="{% url 'daftar_produk' %}" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white hover:text-[#7A8450] w-full">
+              <i data-lucide="package" class="w-5 h-5"></i> Produk
+            </a>
+            <button id="produkToggle" class="text-white pr-2 focus:outline-none">
+              <svg id="produkArrow" class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+          </div>
+          <div id="produkSubmenu" class="ml-8 mt-1 space-y-1 hidden transition-all duration-300 ease-in-out">
+            <a href="{% url 'kategori_produk' %}" class="block px-3 py-1 text-sm rounded-md hover:bg-white hover:text-[#7A8450]">Kategori</a>
+            <a href="{% url 'satuan_produk' %}" class="block px-3 py-1 text-sm rounded-md hover:bg-white hover:text-[#7A8450]">Satuan</a>
+          </div>
+        </div>
+
+        <a href="{% url 'pemasok' %}" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white hover:text-[#7A8450]">
+          <i data-lucide="truck" class="w-5 h-5"></i> Pemasok
+        </a>
+
+        <a href="{% url 'penjualan' %}" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white hover:text-[#7A8450]">
+          <i data-lucide="shopping-cart" class="w-5 h-5"></i> Penjualan
+        </a>
+
+        <a href="{% url 'daftar_pembelian' %}" class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white hover:text-[#7A8450]">
+          <i data-lucide="file-text" class="w-5 h-5"></i> Pembelian
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Konten Utama -->
+    <main id="mainContent" class="ml-64 p-6 w-full bg-[#F3EBDB] text-[#7A8450] transition-all min-h-screen">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+
+  <!-- Script -->
+  <script>
+    const toggleBtn = document.getElementById('toggleSidebar');
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
+    let sidebarVisible = true;
+
+    toggleBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('-translate-x-full');
+      mainContent.classList.toggle('ml-64');
+      mainContent.classList.toggle('ml-4');
+      sidebarVisible = !sidebarVisible;
+    });
+
+    const produkToggle = document.getElementById('produkToggle');
+    const produkSubmenu = document.getElementById('produkSubmenu');
+    const produkArrow = document.getElementById('produkArrow');
+
+    produkToggle.addEventListener('click', () => {
+      produkSubmenu.classList.toggle('hidden');
+      produkArrow.classList.toggle('rotate-180');
+    });
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>

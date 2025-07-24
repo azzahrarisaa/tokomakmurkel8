@@ -1,0 +1,46 @@
+{% extends 'layouts.html' %}
+
+{% block title %}Satuan Produk{% endblock %}
+
+{% block content %}
+<h2 class="text-3xl font-bold mb-6 text-[#7A8450]">Daftar Satuan Produk</h2>
+
+<!-- Tombol Tambah Satuan -->
+<div class="flex justify-end mb-4">
+  <a href="{% url 'tambah_satuan' %}" class="bg-[#F297A0] hover:bg-[#e1858b] text-white px-4 py-2 rounded shadow transition-all">
+    + Tambah Satuan
+  </a>
+</div>
+
+<!-- Tabel Satuan -->
+<div class="overflow-x-auto shadow rounded-lg border border-[#F297A0] bg-white">
+  <table class="min-w-full text-sm text-left">
+    <thead class="bg-[#F297A0] text-white uppercase text-xs">
+      <tr>
+        <th class="px-4 py-3">No</th>
+        <th class="px-4 py-3">Nama Satuan</th>
+        <th class="px-4 py-3 text-center">Aksi</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-[#F9D0CE] text-[#7A8450]">
+      {% for item in data %}
+      <tr class="hover:bg-[#F9D0CE] transition">
+        <td class="px-4 py-3">{{ forloop.counter }}</td>
+        <td class="px-4 py-3">{{ item.nama }}</td>
+        <td class="px-4 py-3 text-center space-x-2">
+          <a href="{% url 'edit_satuan' item.id %}" class="inline-block bg-[#F297A0] hover:bg-[#e1858b] text-white px-3 py-1 text-xs rounded transition-all">Edit</a>
+          <form action="{% url 'hapus_satuan' item.id %}" method="post" class="inline" onsubmit="return confirm('Yakin ingin menghapus satuan ini?');">
+            {% csrf_token %}
+            <button type="submit" class="bg-red-400 hover:bg-red-500 text-white px-3 py-1 text-xs rounded transition-all">🗑️ Hapus</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="3" class="text-center py-4 text-[#7A8450]">Belum ada data satuan.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

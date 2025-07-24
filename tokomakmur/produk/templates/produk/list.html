@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <h1 class="text-3xl font-bold text-center mb-6">Daftar Produk</h1>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full border border-gray-300 text-sm text-left">
+      <thead class="bg-gray-100 text-gray-700">
+        <tr>
+          <th class="px-4 py-2 border">Kode</th>
+          <th class="px-4 py-2 border">Nama Produk</th>
+          <th class="px-4 py-2 border">Kategori</th>
+          <th class="px-4 py-2 border">Stok</th>
+          <th class="px-4 py-2 border">Harga Jual</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in produk %}
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-2 border">{{ p.kode_produk }}</td>
+          <td class="px-4 py-2 border">{{ p.nama }}</td>
+          <td class="px-4 py-2 border">{{ p.kategori }}</td>
+          <td class="px-4 py-2 border">{{ p.stok }}</td>
+          <td class="px-4 py-2 border">Rp {{ p.harga_jual|floatformat:0 }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

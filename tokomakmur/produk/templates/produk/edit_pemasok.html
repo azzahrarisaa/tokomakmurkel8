@@ -1,0 +1,26 @@
+{% extends 'layouts.html' %}
+{% block title %}Edit Pemasok{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl font-bold mb-6 text-[#F297A0]">Edit Pemasok</h1>
+
+<form method="POST" class="bg-white p-6 rounded shadow max-w-xl">
+  {% csrf_token %}
+  <div class="mb-4">
+    <label class="block font-semibold mb-1" for="nama">Nama:</label>
+    <input type="text" name="nama" id="nama" value="{{ pemasok.nama }}" class="w-full border px-3 py-2 rounded" required>
+  </div>
+  <div class="mb-4">
+    <label class="block font-semibold mb-1" for="kontak">Kontak:</label>
+    <input type="text" name="kontak" id="kontak" value="{{ pemasok.kontak }}" class="w-full border px-3 py-2 rounded" required>
+  </div>
+  <div class="mb-4">
+    <label class="block font-semibold mb-1" for="alamat">Alamat:</label>
+    <textarea name="alamat" id="alamat" class="w-full border px-3 py-2 rounded" required>{{ pemasok.alamat }}</textarea>
+  </div>
+  <div class="flex justify-end space-x-2">
+    <a href="{% url 'pemasok' %}" class="px-4 py-2 bg-[#F3EBDB] text-[#7A8450] rounded-lg hover:bg-[#e4dccb] transition-all">Batal</a>
+    <button type="submit" class="px-4 py-2 bg-[#F297A0] text-white rounded-lg hover:bg-[#e1858b] transition-all">Simpan</button>
+  </div>
+</form>
+{% endblock %}

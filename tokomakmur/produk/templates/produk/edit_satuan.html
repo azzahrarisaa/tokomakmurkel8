@@ -1,0 +1,18 @@
+{% extends "layouts.html" %}
+{% block title %}Edit Satuan{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl font-bold mb-6 text-[#F297A0]">Edit Satuan</h2>
+
+<form method="post" class="bg-white p-6 rounded shadow max-w-xl">
+  {% csrf_token %}
+  <div class="mb-4">
+    <label class="block mb-1 font-semibold">Nama Satuan:</label>
+    <input type="text" name="nama" value="{{ satuan.nama }}" class="w-full border border-gray-300 rounded px-3 py-2" required>
+  </div>
+   <div class="flex justify-end gap-2">
+    <a href="{% url 'satuan_produk' %}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">Batal</a>
+    <button type="submit" class="px-4 py-2 bg-[#F297A0] text-white rounded-lg hover:bg-[#e1858b] transition-all">Simpan</button>
+  </div>
+</form>
+{% endblock %}

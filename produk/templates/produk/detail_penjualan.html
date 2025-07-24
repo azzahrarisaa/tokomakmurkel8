@@ -1,0 +1,53 @@
+{% extends 'layouts.html' %}
+{% load humanize %}
+{% load custom_filters %}
+
+{% block title %}Detail Penjualan{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl font-bold mb-4 text-[#F297A0]">Detail Penjualan</h2>
+
+<!-- Info Penjualan -->
+<div class="mb-4 text-sm text-[#7A8450] space-y-1">
+  <p><strong>Tanggal:</strong> {{ penjualan.tanggal }}</p>
+  <p><strong>Pelanggan:</strong> {{ penjualan.pelanggan }}</p>
+  <p><strong>Kasir:</strong> {{ penjualan.kasir.username }}</p>
+</div>
+
+<!-- Tabel Detail Produk -->
+<div class="overflow-x-auto shadow rounded border border-[#F297A0] bg-white">
+  <table class="min-w-full text-sm border-separate border-spacing-0">
+    <thead class="bg-pink-100 text-[#7A8450] uppercase">
+      <tr>
+        <th class="px-4 py-2 text-left border-b">Produk</th>
+        <th class="px-4 py-2 text-left border-b">Jumlah</th>
+        <th class="px-4 py-2 text-left border-b">Harga Satuan</th>
+        <th class="px-4 py-2 text-left border-b">Subtotal</th>
+      </tr>
+    </thead>
+    <tbody class="bg-white text-[#7A8450]">
+      {% for d in detail %}
+      {% with d.jumlah|multiply:d.harga_satuan as subtotal %}
+      <tr class="hover:bg-[#F9D0CE] transition">
+        <td class="px-4 py-2 border-b">{{ d.produk.nama }}</td>
+        <td class="px-4 py-2 border-b">{{ d.jumlah }}</td>
+        <td class="px-4 py-2 border-b">Rp {{ d.harga_satuan|floatformat:0|intcomma }}</td>
+        <td class="px-4 py-2 border-b">Rp {{ subtotal|floatformat:0|intcomma }}</td>
+      </tr>
+      {% endwith %}
+      {% empty %}
+      <tr><td colspan="4" class="px-4 py-2 text-center text-gray-400">Tidak ada data detail penjualan.</td></tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr class="bg-[#fbeaec] text-[#7A8450] font-semibold">
+        <td colspan="3" class="px-4 py-2 text-right">Total:</td>
+        <td class="px-4 py-2">Rp {{ penjualan.total|floatformat:0|intcomma }}</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+<!-- Tombol Kembali -->
+<a href="{% url 'penjualan' %}" class="inline-block mt-6 bg-[#F297A0] hover:bg-[#e1858b] text-white px-4 py-2 rounded shadow transition">← Kembali</a>
+{% endblock %}
